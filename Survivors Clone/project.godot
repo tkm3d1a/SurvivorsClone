@@ -36,6 +36,8 @@ enabled=PackedStringArray("res://addons/Todo_Manager/plugin.cfg")
 
 folder_colors={
 "res://Assets/": "orange",
+"res://Scenes/": "green",
+"res://Scripts/": "purple",
 "res://addons/": "red"
 }
 
@@ -90,4 +92,3 @@ Pause={
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
-renderer/rendering_method="mobile"
