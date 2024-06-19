@@ -1,10 +1,32 @@
-[gd_scene load_steps=4 format=3 uid="uid://c0w6u3ximsi"]
+[gd_scene load_steps=6 format=3 uid="uid://c0w6u3ximsi"]
 
 [ext_resource type="Texture2D" uid="uid://bun5sqpsuox0q" path="res://Assets/Textures/Enemy/kolbold_weak.png" id="1_7cl8b"]
 [ext_resource type="Script" path="res://Scripts/Enemy/enemy.gd" id="1_kh2do"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5461y"]
 radius = 12.0
+
+[sub_resource type="Animation" id="Animation_5168c"]
+resource_name = "walk"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_oxaqp"]
+_data = {
+"walk": SubResource("Animation_5168c")
+}
 
 [node name="EnemyKolboldWeak" type="CharacterBody2D"]
 motion_mode = 1
@@ -17,3 +39,9 @@ hframes = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2)
 shape = SubResource("CapsuleShape2D_5461y")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_oxaqp")
+}
