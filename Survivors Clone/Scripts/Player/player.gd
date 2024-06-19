@@ -4,6 +4,7 @@ extends CharacterBody2D
 @export var move_speed: float = 75.0
 
 func _ready() -> void:
+    # TODO: Remove when script complete for mvp
     printerr("Script not complete: " + name)
 
 func _physics_process(_delta: float) -> void:

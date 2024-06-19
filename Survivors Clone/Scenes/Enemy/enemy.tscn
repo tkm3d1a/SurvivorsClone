@@ -6,7 +6,7 @@
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5461y"]
 radius = 12.0
 
-[node name="EnemyKoboldWeak" type="CharacterBody2D"]
+[node name="EnemyKolboldWeak" type="CharacterBody2D"]
 motion_mode = 1
 script = ExtResource("1_kh2do")
 
