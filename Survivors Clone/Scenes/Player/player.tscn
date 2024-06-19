@@ -5,16 +5,17 @@
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xsyw7"]
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" groups=["player"]]
 motion_mode = 1
 script = ExtResource("1_1smy3")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -14)
 texture = ExtResource("1_8wcva")
 hframes = 2
 region_rect = Rect2(5, 0, 28, 32)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(1, -13)
+position = Vector2(1, 1)
 shape = SubResource("CapsuleShape2D_xsyw7")
+
+[node name="Camera2D" type="Camera2D" parent="."]
