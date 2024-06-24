@@ -17,7 +17,7 @@ func _on_timer_timeout() -> void:
 				item.spawn_delay_counter += 1
 			else:
 				item.spawn_delay_counter = 0
-				var new_enemy: PackedScene = load(str(item.enemy_resource.resource_path))
+				var new_enemy: PackedScene = item.enemy_resource
 				var counter: int = 0
 				while counter < item.enemy_num:
 					var enemy_spawned: Node = new_enemy.instantiate()

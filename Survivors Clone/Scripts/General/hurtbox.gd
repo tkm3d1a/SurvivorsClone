@@ -24,6 +24,8 @@ func _on_area_entered(area: Area2D) -> void: # autolinked signal from editor
 					pass
 			var damage: int = area.damage
 			emit_signal("hurt", damage)
+			if area.has_method("enemy_hit"):
+				area.enemy_hit(1)
 
 func _on_timer_timeout() -> void: # autolinked signal from editor
 	collision_node.call_deferred("set", "disabled", false)

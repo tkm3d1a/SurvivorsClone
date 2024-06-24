@@ -58,14 +58,14 @@ libraries = {
 }
 
 [node name="Hurtbox" parent="." instance=ExtResource("3_ynqla")]
-collision_mask = 4
+collision_mask = 2
 
 [node name="CollisionShape2D" parent="Hurtbox" index="0"]
 position = Vector2(0.5, 2)
 shape = SubResource("RectangleShape2D_rpyyj")
 
 [node name="Hitbox" parent="." instance=ExtResource("4_js524")]
-collision_layer = 2
+collision_layer = 4
 
 [node name="CollisionShape2D" parent="Hitbox" index="0"]
 position = Vector2(0, 2)
