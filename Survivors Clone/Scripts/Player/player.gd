@@ -70,7 +70,7 @@ func get_random_target() -> Vector2:
 	else:
 		return Vector2.UP
 
-func _on_hurtbox_hurt(damage: int) -> void: # common-ish
+func _on_hurtbox_hurt(damage: int, _angle: Vector2, _knockback_amount: int) -> void: # common-ish
 	hp -= damage
 	print(hp)
 
