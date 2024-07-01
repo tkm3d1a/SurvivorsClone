@@ -1,7 +1,7 @@
+extends CharacterBody2D
 class_name enemy
 # HACK: possible issue with class name not matching scene name in the future with other enemy types?
 # TODO: clean up and inherit from a base 'character' class
-extends CharacterBody2D
 
 @export var move_speed: float = 30.0 # common/diff value
 @export var hp: int = 10 # common/diff value

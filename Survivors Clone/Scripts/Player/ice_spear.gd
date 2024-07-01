@@ -1,9 +1,9 @@
-class_name IceSpear
 extends Area2D
+class_name IceSpear
 
 var level: int = 1
 var hp: int = 1
-var speed: int = 100
+var speed: float = 100
 var damage: int = 5
 var knockback_amount: int = 10
 var attack_size: float = 1.0
@@ -18,6 +18,7 @@ signal remove_from_array(object:Area2D)
 func _ready() -> void:
 	angle = global_position.direction_to(target)
 	rotation = angle.angle() + deg_to_rad(135)
+	level = player_node.ice_spear_lvl
 	match level:
 		1:
 			hp = 3
