@@ -1,11 +1,12 @@
 extends Area2D
 class_name IceSpear
 
+#TODO: Need to set up correct export variables for leveling up
 var level: int = 1
 var hp: int = 1
 var speed: float = 100
 var damage: int = 5
-var knockback_amount: int = 10
+var knockback_amount: int = 100
 var attack_size: float = 1.0
 
 var target: Vector2 = Vector2.ZERO
@@ -13,7 +14,7 @@ var angle: Vector2 = Vector2.ZERO
 
 @onready var player_node: player = get_tree().get_first_node_in_group("player")
 
-signal remove_from_array(object:Area2D)
+signal remove_from_array(object: Area2D)
 
 func _ready() -> void:
 	angle = global_position.direction_to(target)
@@ -21,7 +22,7 @@ func _ready() -> void:
 	level = player_node.ice_spear_lvl
 	match level:
 		1:
-			hp = 3
+			hp = 1
 			speed = 100
 			damage = 5
 			knockback_amount = 100
@@ -39,7 +40,7 @@ func _physics_process(delta: float) -> void:
 func enemy_hit(charge: int) -> void:
 	hp -= charge
 	if hp <= 0:
-		emit_signal("remove_from_array",self)
+		emit_signal("remove_from_array", self)
 		queue_free()
 
 func _on_timer_timeout() -> void:

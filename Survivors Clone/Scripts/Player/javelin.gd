@@ -1,6 +1,7 @@
 extends Area2D
 class_name Javelin
 
+#TODO: Need to set up correct export variables for leveling up
 var level: int = 1
 var hp: int = 999
 var speed: float = 200
