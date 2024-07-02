@@ -100,7 +100,7 @@ func spawn_javelin() -> void:
 	var get_jav_total: int = javelin_base.get_child_count()
 	var calc_spawns: int = javelin_ammo - get_jav_total
 	while calc_spawns > 0:
-		var new_javelin_node:Javelin = javelin.instantiate()
+		var new_javelin_node: Javelin = javelin.instantiate()
 		new_javelin_node.global_position = global_position
 		javelin_base.add_child(new_javelin_node)
 		calc_spawns -= 1
