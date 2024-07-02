@@ -5,6 +5,11 @@ class_name player
 @export var move_speed: float = 75.0 # common
 @export var hp: int = 80 # common
 
+# Experience
+var experience: int = 0
+var exp_level: int = 1
+var collected_exp: int = 0
+
 # Attacks
 var ice_spear: PackedScene = preload ("res://Scenes/Player/ice_spear.tscn")
 var tornado: PackedScene = preload ("res://Scenes/Player/tornado.tscn")
@@ -39,10 +44,13 @@ var enemy_close: Array[Node2D] = []
 
 @onready var sprite_node: Sprite2D = $Sprite2D # common
 @onready var walk_timer_node: Timer = get_node("WalkTimer")
+@onready var exp_bar_node: TextureProgressBar = get_node("GUILayer/GUI/ExperienceBar")
+@onready var level_label_node: Label = get_node("GUILayer/GUI/ExperienceBar/HBoxContainer/LevelValue")
 
 func _ready() -> void:
 	attack()
 	# TODO: Remove when script complete for mvp
+	set_exp_bar(experience, calculate_experience_cap())
 	printerr("Script not complete: " + name)
 
 func _physics_process(_delta: float) -> void:
@@ -105,6 +113,38 @@ func spawn_javelin() -> void:
 		javelin_base.add_child(new_javelin_node)
 		calc_spawns -= 1
 
+func calculate_experience(gem_experience: int) -> void:
+	var experience_required: int = calculate_experience_cap()
+	collected_exp += gem_experience
+	if experience + collected_exp >= experience_required:
+		collected_exp -= (experience_required - experience)
+		exp_level += 1
+		experience = 0
+		experience_required = calculate_experience_cap()
+		calculate_experience(0)
+	else:
+		experience += collected_exp
+		collected_exp = 0
+	
+	# print("exp: " + str(experience) + " || exp_req: " + str(experience_required))
+	set_exp_bar(experience, experience_required)
+
+func calculate_experience_cap() -> int:
+	var exp_cap: int = exp_level
+	if exp_cap < 20:
+		exp_cap = exp_level * 5
+	elif exp_cap < 40:
+		exp_cap = exp_level * 8
+	else:
+		exp_cap = exp_level * 12
+
+	return exp_cap
+
+func set_exp_bar(set_value: int=1, set_max_value: int=100) -> void:
+	exp_bar_node.value = set_value
+	exp_bar_node.max_value = set_max_value
+	level_label_node.text = str(exp_level)
+
 func _on_hurtbox_hurt(damage: int, _angle: Vector2, _knockback_amount: int) -> void: # common-ish
 	hp -= damage
 	print(hp)
@@ -150,3 +190,12 @@ func _on_enemy_detection_area_body_entered(body: Node2D) -> void:
 func _on_enemy_detection_area_body_exited(body: Node2D) -> void:
 	if enemy_close.has(body):
 		enemy_close.erase(body)
+
+func _on_grab_area_area_entered(area: Area2D) -> void:
+	if area.is_in_group("loot"):
+		area.target = self
+
+func _on_collect_area_area_entered(area: Area2D) -> void:
+	if area.is_in_group("loot"):
+		var gem_exp: int = area.collect()
+		calculate_experience(gem_exp)

@@ -6,14 +6,17 @@ class_name enemy
 @export var move_speed: float = 30.0 # common/diff value
 @export var hp: int = 10 # common/diff value
 @export var knockback_recovery: float = 3.5
+@export var experience: int = 1
 
 var knockback: Vector2 = Vector2.ZERO
 var death_anim_scene: PackedScene = preload ("res://Scenes/Enemy/explosion.tscn")
+var gem_scene: PackedScene = preload ("res://Scenes/Objects/experience_gem.tscn")
 
 @onready var target: player = get_tree().get_first_node_in_group("player")
 @onready var sprite_node: Sprite2D = $Sprite2D # common
 @onready var anim_player_node: AnimationPlayer = get_node("AnimationPlayer")
 @onready var sound_hit: AudioStreamPlayer = $snd_hit
+@onready var loot_base: Node2D = get_tree().get_first_node_in_group("loot")
 
 signal remove_from_array(object: Node2D)
 
@@ -45,7 +48,14 @@ func death() -> void:
 	death_anim.scale = sprite_node.scale
 	death_anim.global_position = global_position
 	get_parent().call_deferred("add_child", death_anim)
+	spawn_gem()
 	queue_free()
+
+func spawn_gem() -> void:
+	var gem_node: ExperienceGem = gem_scene.instantiate()
+	gem_node.global_position = global_position
+	gem_node.experience_value = experience
+	loot_base.call_deferred("add_child", gem_node)
 
 func _on_hurtbox_hurt(damage: int, angle: Vector2, knockback_amount: int) -> void: # common-ish
 	hp -= damage

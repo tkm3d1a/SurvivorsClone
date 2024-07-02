@@ -1,6 +1,6 @@
+extends Node2D
 class_name enemySpawner
 # Fixme: class names need to be standardized - causing issues in coding but not breaking anything currently
-extends Node2D
 
 @export var spawns: Array[spawn_info] = []
 
