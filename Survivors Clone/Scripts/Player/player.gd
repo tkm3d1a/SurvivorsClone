@@ -46,11 +46,16 @@ var enemy_close: Array[Node2D] = []
 @onready var walk_timer_node: Timer = get_node("WalkTimer")
 @onready var exp_bar_node: TextureProgressBar = get_node("GUILayer/GUI/ExperienceBar")
 @onready var level_label_node: Label = get_node("GUILayer/GUI/ExperienceBar/HBoxContainer/LevelValue")
+@onready var on_level_panel_node: Panel = get_node("GUILayer/GUI/LevelUp")
+@onready var upgrade_options_node: VBoxContainer = get_node("GUILayer/GUI/LevelUp/UpgradeOptions")
+@onready var level_up_stream_node: AudioStreamPlayer = get_node("GUILayer/GUI/LevelUp/snd_lvl_up")
+@onready var item_option_scene: PackedScene = preload ("res://Scenes/General/item_option.tscn")
 
 func _ready() -> void:
 	attack()
 	# TODO: Remove when script complete for mvp
 	set_exp_bar(experience, calculate_experience_cap())
+	level_label_node.text = str(exp_level)
 	printerr("Script not complete: " + name)
 
 func _physics_process(_delta: float) -> void:
@@ -121,7 +126,7 @@ func calculate_experience(gem_experience: int) -> void:
 		exp_level += 1
 		experience = 0
 		experience_required = calculate_experience_cap()
-		calculate_experience(0)
+		level_up()
 	else:
 		experience += collected_exp
 		collected_exp = 0
@@ -143,7 +148,31 @@ func calculate_experience_cap() -> int:
 func set_exp_bar(set_value: int=1, set_max_value: int=100) -> void:
 	exp_bar_node.value = set_value
 	exp_bar_node.max_value = set_max_value
+	
+func level_up() -> void:
+	level_up_stream_node.play()
 	level_label_node.text = str(exp_level)
+	var tween: Tween = on_level_panel_node.create_tween()
+	tween.tween_property(on_level_panel_node, "position", Vector2(220, 50), 0.2).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
+	tween.play()
+	on_level_panel_node.visible = true
+	var options: int = 0
+	var options_max: int = 3
+	while options < options_max:
+		var item_option_node: ItemOption = item_option_scene.instantiate()
+		upgrade_options_node.add_child(item_option_node)
+		options += 1
+
+	get_tree().paused = true
+
+func upgrade_character(upgrade) -> void:
+	var option_children: Array = upgrade_options_node.get_children()
+	for i: ItemOption in option_children:
+		i.queue_free()
+	on_level_panel_node.visible = false
+	on_level_panel_node.position = Vector2(800, 50)
+	get_tree().paused = false
+	calculate_experience(0)
 
 func _on_hurtbox_hurt(damage: int, _angle: Vector2, _knockback_amount: int) -> void: # common-ish
 	hp -= damage

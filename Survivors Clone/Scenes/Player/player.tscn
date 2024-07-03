@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bg23r740awxdj"]
+[gd_scene load_steps=13 format=3 uid="uid://bg23r740awxdj"]
 
 [ext_resource type="Script" path="res://Scripts/Player/player.gd" id="1_1smy3"]
 [ext_resource type="Texture2D" uid="uid://ctpjkgm52tchg" path="res://Assets/Textures/Player/player_sprite.png" id="1_8wcva"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cex0oeinupilv" path="res://Assets/Textures/GUI/exp_background.png" id="4_g8n22"]
 [ext_resource type="FontFile" uid="uid://bn5l6tyghepl2" path="res://Assets/Font/tenderness.otf" id="5_doq3g"]
 [ext_resource type="Texture2D" uid="uid://bi4a88m7yb20w" path="res://Assets/Textures/GUI/exp_progress.png" id="5_jkmax"]
+[ext_resource type="AudioStream" uid="uid://djcwnofv4u871" path="res://Assets/Audio/SoundEffect/levelup.ogg" id="7_hm0v7"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xsyw7"]
 radius = 8.0
@@ -145,6 +146,49 @@ theme_override_font_sizes/font_size = 16
 text = "999999"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="LevelUp" type="Panel" parent="GUILayer/GUI"]
+unique_name_in_owner = true
+process_mode = 2
+visible = false
+custom_minimum_size = Vector2(200, 250)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 480.0
+offset_top = -125.0
+offset_right = 680.0
+offset_bottom = 125.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="lbl_LevelUp" type="Label" parent="GUILayer/GUI/LevelUp"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 50.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("5_doq3g")
+text = "Level Up!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="UpgradeOptions" type="VBoxContainer" parent="GUILayer/GUI/LevelUp"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 50)
+layout_mode = 0
+offset_left = 10.0
+offset_top = 50.0
+offset_right = 190.0
+offset_bottom = 100.0
+
+[node name="snd_lvl_up" type="AudioStreamPlayer" parent="GUILayer/GUI/LevelUp"]
+unique_name_in_owner = true
+stream = ExtResource("7_hm0v7")
+volume_db = -10.0
 
 [connection signal="hurt" from="Hurtbox" to="." method="_on_hurtbox_hurt"]
 [connection signal="timeout" from="Attack/IceSpearTimer" to="." method="_on_ice_spear_timer_timeout"]

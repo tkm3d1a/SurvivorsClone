@@ -15,9 +15,9 @@ var speed: float = -0.5
 @onready var stream_node: AudioStreamPlayer = get_node("snd_collected")
 
 func _ready() -> void:
-	if experience_value < 5:
+	if experience_value <= 5:
 		return
-	elif experience_value < 25:
+	elif experience_value <= 25:
 		sprite_node.texture = spr_blue
 	else:
 		sprite_node.texture = spr_red

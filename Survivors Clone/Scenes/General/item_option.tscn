@@ -1,0 +1,63 @@
+[gd_scene load_steps=4 format=3 uid="uid://dygsf2gmccrar"]
+
+[ext_resource type="Texture2D" uid="uid://mhuwd84pxxde" path="res://Assets/Textures/Items/Weapons/sword.png" id="1_mq6ia"]
+[ext_resource type="Script" path="res://Scripts/General/item_option.gd" id="1_tqhs0"]
+[ext_resource type="FontFile" uid="uid://bn5l6tyghepl2" path="res://Assets/Font/tenderness.otf" id="2_l0b6c"]
+
+[node name="ItemOption" type="ColorRect"]
+custom_minimum_size = Vector2(180, 50)
+anchors_preset = -1
+anchor_right = 0.281
+anchor_bottom = 0.139
+offset_right = -139.84
+offset_bottom = -10.04
+color = Color(0.351563, 0.351563, 0.351563, 1)
+script = ExtResource("1_tqhs0")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 26.0
+offset_bottom = 26.0
+color = Color(0.111197, 0.111197, 0.111197, 1)
+
+[node name="TextureRect" type="TextureRect" parent="ColorRect"]
+layout_mode = 0
+offset_right = 32.0
+offset_bottom = 32.0
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("1_mq6ia")
+
+[node name="lbl_Name" type="Label" parent="."]
+layout_mode = 0
+offset_left = 39.0
+offset_top = 2.0
+offset_right = 79.0
+offset_bottom = 25.0
+theme_override_fonts/font = ExtResource("2_l0b6c")
+text = "Name"
+
+[node name="lbl_Description" type="Label" parent="."]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 27.0
+offset_right = 166.0
+offset_bottom = 48.0
+theme_override_fonts/font = ExtResource("2_l0b6c")
+theme_override_font_sizes/font_size = 8
+text = "A short description here of item"
+autowrap_mode = 3
+
+[node name="lbl_Level" type="Label" parent="."]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 3.0
+offset_right = 170.0
+offset_bottom = 26.0
+theme_override_fonts/font = ExtResource("2_l0b6c")
+theme_override_font_sizes/font_size = 12
+text = "999"
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
