@@ -26,7 +26,25 @@ func _ready() -> void:
 			speed = 100
 			damage = 5
 			knockback_amount = 100
-			attack_size = 1.0
+			attack_size = 1.0 * (1 + player_node.spell_size)
+		2:
+			hp = 1
+			speed = 100
+			damage = 5
+			knockback_amount = 100
+			attack_size = 1.0 * (1 + player_node.spell_size)
+		3:
+			hp = 2
+			speed = 100
+			damage = 8
+			knockback_amount = 100
+			attack_size = 1.0 * (1 + player_node.spell_size)
+		4:
+			hp = 2
+			speed = 100
+			damage = 8
+			knockback_amount = 100
+			attack_size = 1.0 * (1 + player_node.spell_size)
 		_:
 			pass
 

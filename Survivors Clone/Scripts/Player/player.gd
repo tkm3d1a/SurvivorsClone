@@ -4,6 +4,7 @@ class_name player
 
 @export var move_speed: float = 75.0 # common
 @export var hp: int = 80 # common
+var max_hp: int = 80
 
 # Experience
 var experience: int = 0
@@ -24,23 +25,32 @@ var javelin: PackedScene = preload ("res://Scenes/Player/javelin.tscn")
 
 # IceSpear
 var ice_spear_ammo: int = 0
-var ice_spear_base_ammo: int = 1
-@export var ice_spear_lvl: int = 1
-@export var ice_spear_atk_spd: float = 1.5
+var ice_spear_base_ammo: int = 0
+@export var ice_spear_lvl: int = 0
+var ice_spear_atk_spd: float = 1.5
 
 # Tornado
 var last_movement: Vector2 = Vector2.UP
 var tornado_ammo: int = 0
-var tornado_base_ammo: int = 1
-@export var tornado_lvl: int = 1
-@export var tornado_atk_spd: float = 3.0
+var tornado_base_ammo: int = 0
+@export var tornado_lvl: int = 0
+var tornado_atk_spd: float = 3.0
 
 # Javelin
-var javelin_ammo: int = 1
-@export var javelin_lvl: int = 1
+var javelin_ammo: int = 0
+@export var javelin_lvl: int = 0
 
 # Enemy Related
 var enemy_close: Array[Node2D] = []
+
+# Upgrades
+var collected_upgrades: Array[String] = []
+var upgrade_options: Array[String] = []
+var armor: int = 0
+var speed: int = 0
+var spell_cooldown: float = 0
+var spell_size: float = 0
+var additional_attacks: int = 0
 
 @onready var sprite_node: Sprite2D = $Sprite2D # common
 @onready var walk_timer_node: Timer = get_node("WalkTimer")
@@ -52,7 +62,9 @@ var enemy_close: Array[Node2D] = []
 @onready var item_option_scene: PackedScene = preload ("res://Scenes/General/item_option.tscn")
 
 func _ready() -> void:
-	attack()
+	max_hp = hp
+	upgrade_character("icespear1")
+	# attack()
 	# TODO: Remove when script complete for mvp
 	set_exp_bar(experience, calculate_experience_cap())
 	level_label_node.text = str(exp_level)
@@ -91,12 +103,12 @@ func animate_sprite() -> void:
 
 func attack() -> void:
 	if ice_spear_lvl > 0:
-		ice_spear_timer.wait_time = ice_spear_atk_spd
+		ice_spear_timer.wait_time = ice_spear_atk_spd * (1 - spell_cooldown)
 		if ice_spear_timer.is_stopped():
 			ice_spear_timer.start()
 
 	if tornado_lvl > 0:
-		tornado_timer.wait_time = tornado_atk_spd
+		tornado_timer.wait_time = tornado_atk_spd * (1 - spell_cooldown)
 		if tornado_timer.is_stopped():
 			tornado_timer.start()
 
@@ -111,12 +123,16 @@ func get_random_target() -> Vector2:
 
 func spawn_javelin() -> void:
 	var get_jav_total: int = javelin_base.get_child_count()
-	var calc_spawns: int = javelin_ammo - get_jav_total
+	var calc_spawns: int = (javelin_ammo + additional_attacks) - get_jav_total
 	while calc_spawns > 0:
 		var new_javelin_node: Javelin = javelin.instantiate()
 		new_javelin_node.global_position = global_position
 		javelin_base.add_child(new_javelin_node)
 		calc_spawns -= 1
+	# update javelin
+	var existing_javelins: Array = javelin_base.get_children()
+	for i: Javelin in existing_javelins:
+		i.update_javelin()
 
 func calculate_experience(gem_experience: int) -> void:
 	var experience_required: int = calculate_experience_cap()
@@ -160,26 +176,103 @@ func level_up() -> void:
 	var options_max: int = 3
 	while options < options_max:
 		var item_option_node: ItemOption = item_option_scene.instantiate()
+		item_option_node.item = get_random_item()
 		upgrade_options_node.add_child(item_option_node)
 		options += 1
 
 	get_tree().paused = true
 
-func upgrade_character(upgrade) -> void:
+func upgrade_character(upgrade: String) -> void:
+	match upgrade:
+		"icespear1":
+			ice_spear_lvl = 1
+			ice_spear_base_ammo += 1
+		"icespear2":
+			ice_spear_lvl = 2
+			ice_spear_base_ammo += 1
+		"icespear3":
+			ice_spear_lvl = 3
+		"icespear4":
+			ice_spear_lvl = 4
+			ice_spear_base_ammo += 2
+		"tornado1":
+			tornado_lvl = 1
+			tornado_base_ammo += 1
+		"tornado2":
+			tornado_lvl = 2
+			tornado_base_ammo += 1
+		"tornado3":
+			tornado_lvl = 3
+			tornado_atk_spd -= 0.5
+		"tornado4":
+			tornado_lvl = 4
+			tornado_base_ammo += 1
+		"javelin1":
+			javelin_lvl = 1
+			javelin_ammo = 1
+		"javelin2":
+			javelin_lvl = 2
+		"javelin3":
+			javelin_lvl = 3
+		"javelin4":
+			javelin_lvl = 4
+		"armor1", "armor2", "armor3", "armor4":
+			armor += 1
+		"speed1", "speed2", "speed3", "speed4":
+			move_speed += 20.0
+		"tome1", "tome2", "tome3", "tome4":
+			spell_size += 0.10
+		"scroll1", "scroll2", "scroll3", "scroll4":
+			spell_cooldown += 0.05
+		"ring1", "ring2":
+			additional_attacks += 1
+		"food":
+			hp += 20
+			hp = clamp(hp, 0, max_hp)
+
+	attack()
+
 	var option_children: Array = upgrade_options_node.get_children()
 	for i: ItemOption in option_children:
 		i.queue_free()
+	upgrade_options.clear()
+	collected_upgrades.append(upgrade)
 	on_level_panel_node.visible = false
 	on_level_panel_node.position = Vector2(800, 50)
 	get_tree().paused = false
 	calculate_experience(0)
 
+func get_random_item() -> String:
+	var db_list: Array[String] = []
+	for upgrade: String in UpgradeDB.UPGRADES.keys():
+		if upgrade in collected_upgrades:
+			pass
+		elif upgrade in upgrade_options:
+			pass
+		elif UpgradeDB.UPGRADES[upgrade]["type"] == "item":
+			pass
+		elif UpgradeDB.UPGRADES[upgrade]["prerequisite"].size() > 0:
+			for pr: String in UpgradeDB.UPGRADES[upgrade]["prerequisite"]:
+				if pr not in collected_upgrades:
+					pass
+				else:
+					db_list.append(upgrade)
+		else:
+			db_list.append(upgrade)
+
+	if db_list.size() > 0:
+		var random_item: String = db_list.pick_random()
+		upgrade_options.append(random_item)
+		return random_item
+	else:
+		return "food"
+
 func _on_hurtbox_hurt(damage: int, _angle: Vector2, _knockback_amount: int) -> void: # common-ish
-	hp -= damage
+	hp -= clamp(damage - armor, 1, 9999)
 	print(hp)
 
 func _on_ice_spear_timer_timeout() -> void:
-	ice_spear_ammo += ice_spear_base_ammo
+	ice_spear_ammo += ice_spear_base_ammo + additional_attacks
 	ice_spear_atk_timer.start()
 
 func _on_ice_spear_attack_timer_timeout() -> void:
@@ -196,7 +289,7 @@ func _on_ice_spear_attack_timer_timeout() -> void:
 			ice_spear_atk_timer.stop()
 
 func _on_tornado_timer_timeout() -> void:
-	tornado_ammo += tornado_base_ammo
+	tornado_ammo += tornado_base_ammo + additional_attacks
 	tornado_atk_timer.start()
 
 func _on_tornado_attack_timer_timeout() -> void:

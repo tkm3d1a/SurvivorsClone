@@ -17,6 +17,10 @@ run/main_scene="res://Scenes/Levels/World/world.tscn"
 config/features=PackedStringArray("4.2", "Mobile")
 config/icon="res://icon.svg"
 
+[autoload]
+
+UpgradeDb="*res://Scenes/General/upgrade_db.tscn"
+
 [debug]
 
 gdscript/warnings/untyped_declaration=1

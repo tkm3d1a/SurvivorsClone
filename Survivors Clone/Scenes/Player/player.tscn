@@ -27,8 +27,6 @@ collision_layer = 2
 collision_mask = 5
 motion_mode = 1
 script = ExtResource("1_1smy3")
-ice_spear_atk_spd = 2.0
-tornado_atk_spd = 4.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_8wcva")
@@ -61,7 +59,7 @@ wait_time = 1.5
 
 [node name="IceSpearAttackTimer" type="Timer" parent="Attack/IceSpearTimer"]
 unique_name_in_owner = true
-wait_time = 0.75
+wait_time = 0.05
 
 [node name="TornadoTimer" type="Timer" parent="Attack"]
 unique_name_in_owner = true

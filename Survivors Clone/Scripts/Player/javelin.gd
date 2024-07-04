@@ -31,20 +31,7 @@ var sprite_jav_atk: CompressedTexture2D = preload ("res://Assets/Textures/Items/
 signal remove_from_array(object: Area2D)
 
 func _ready() -> void:
-	level = player_node.javelin_lvl
-	match level:
-		1:
-			hp = 999
-			speed = 200
-			damage = 10
-			knockback_amount = 100
-			attack_size = 1.0
-			attack_speed = 4.0
-		_:
-			pass
-	
-	scale = Vector2(1.0, 1.0) * attack_size
-	atk_timer_node.wait_time = attack_speed
+	update_javelin()
 	move_jav_no_target()
 
 func _physics_process(delta: float) -> void:
@@ -58,6 +45,43 @@ func _physics_process(delta: float) -> void:
 			return_speed = 100
 		position += player_angle * return_speed * delta
 		rotation = global_position.direction_to(player_node.global_position).angle() + deg_to_rad(135)
+
+func update_javelin() -> void:
+	level = player_node.javelin_lvl
+	match level:
+		1:
+			hp = 999
+			speed = 200
+			damage = 10
+			knockback_amount = 100
+			attack_size = 1.0 * (1 + player_node.spell_size)
+			attack_speed = 4.0 * (1 - player_node.spell_cooldown)
+		2:
+			hp = 999
+			speed = 200
+			damage = 10
+			knockback_amount = 100
+			attack_size = 1.0 * (1 + player_node.spell_size)
+			attack_speed = 4.0 * (1 - player_node.spell_cooldown)
+		3:
+			hp = 999
+			speed = 200
+			damage = 10
+			knockback_amount = 100
+			attack_size = 1.0 * (1 + player_node.spell_size)
+			attack_speed = 4.0 * (1 - player_node.spell_cooldown)
+		4:
+			hp = 999
+			speed = 200
+			damage = 15
+			knockback_amount = 120
+			attack_size = 1.0 * (1 + player_node.spell_size)
+			attack_speed = 4.0 * (1 - player_node.spell_cooldown)
+		_:
+			pass
+	
+	scale = Vector2(1.0, 1.0) * attack_size
+	atk_timer_node.wait_time = attack_speed
 
 func add_paths() -> void:
 	stream_node.play()
