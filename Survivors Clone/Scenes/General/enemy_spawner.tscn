@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cn5tp11f5c3ge"]
 
 [ext_resource type="Script" path="res://Scripts/General/enemy_spawner.gd" id="1_frg3l"]
-[ext_resource type="PackedScene" uid="uid://c0w6u3ximsi" path="res://Scenes/Enemy/enemy.tscn" id="2_7dr1n"]
+[ext_resource type="PackedScene" uid="uid://c0w6u3ximsi" path="res://Scenes/Enemy/enemy_kolbold_weak.tscn" id="2_7dr1n"]
 [ext_resource type="Script" path="res://Scripts/General/spawn_info.gd" id="3_1ajfn"]
 
 [sub_resource type="Resource" id="Resource_41wno"]

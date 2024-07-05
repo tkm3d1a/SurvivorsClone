@@ -13,7 +13,7 @@ config_version=5
 config/name="Survivors Clone"
 config/version="0.0.1"
 config/tags=PackedStringArray("2d", "tutorial")
-run/main_scene="res://Scenes/Levels/World/world.tscn"
+run/main_scene="res://Scenes/General/menu.tscn"
 config/features=PackedStringArray("4.2", "Mobile")
 config/icon="res://icon.svg"
 

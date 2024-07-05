@@ -3,10 +3,9 @@ class_name enemySpawner
 # Fixme: class names need to be standardized - causing issues in coding but not breaking anything currently
 
 @export var spawns: Array[spawn_info] = []
+@export var time: int = 0
 
 @onready var player_node: player = get_tree().get_first_node_in_group("player")
-
-var time: int = 0
 
 signal change_time(time: int)
 

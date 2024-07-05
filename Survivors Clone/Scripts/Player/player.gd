@@ -65,9 +65,16 @@ var additional_attacks: int = 0
 @onready var label_timer_node: Label = get_node("GUILayer/GUI/lbl_Timer")
 @onready var collected_weapons_node: GridContainer = get_node("GUILayer/GUI/CollectedWeapons")
 @onready var collected_upgrade_node: GridContainer = get_node("GUILayer/GUI/CollectedUpgrades")
+@onready var death_panel_node: Panel = get_node("%DeathPanel")
+@onready var label_result: Label = get_node("%lbl_Result")
+@onready var sound_victory_node: AudioStreamPlayer = get_node("%snd_victory")
+@onready var sound_lose_node: AudioStreamPlayer = get_node("%snd_lose")
 
 @onready var item_option_scene: PackedScene = preload ("res://Scenes/General/item_option.tscn")
 @onready var item_container_scene: PackedScene = preload ("res://Scenes/Player/GUI/item_container.tscn")
+
+# Signals
+signal player_death()
 
 func _ready() -> void:
 	max_hp = hp
@@ -309,10 +316,26 @@ func adjust_gui_collection(upgrade: String) -> void:
 				_:
 					printerr("Error in inserting new item container")
 
+func death() -> void:
+	death_panel_node.visible = true
+	emit_signal("player_death")
+	get_tree().paused = true
+	var tween: Tween = death_panel_node.create_tween()
+	tween.tween_property(death_panel_node, "position", Vector2(220, 50), 3.0).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
+	tween.play()
+	if time >= 300:
+		label_result.text = "You Win!"
+		sound_victory_node.play()
+	else:
+		label_result.text = "You lose!"
+		sound_lose_node.play()
+
 func _on_hurtbox_hurt(damage: int, _angle: Vector2, _knockback_amount: int) -> void: # common-ish
 	hp -= clamp(damage - armor, 1, 9999)
 	health_bar_node.max_value = max_hp
 	health_bar_node.value = hp
+	if hp <= 0:
+		death()
 
 func _on_ice_spear_timer_timeout() -> void:
 	ice_spear_ammo += ice_spear_base_ammo + additional_attacks
@@ -364,3 +387,7 @@ func _on_collect_area_area_entered(area: Area2D) -> void:
 	if area.is_in_group("loot"):
 		var gem_exp: int = area.collect()
 		calculate_experience(gem_exp)
+
+func _on_btn_menu_click_end() -> void:
+	get_tree().paused = false
+	get_tree().change_scene_to_file("res://Scenes/General/menu.tscn")
