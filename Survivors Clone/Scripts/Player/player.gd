@@ -6,6 +6,8 @@ class_name player
 @export var hp: int = 80 # common
 var max_hp: int = 80
 
+var time: float = 0
+
 # Experience
 var experience: int = 0
 var exp_level: int = 1
@@ -59,6 +61,9 @@ var additional_attacks: int = 0
 @onready var on_level_panel_node: Panel = get_node("GUILayer/GUI/LevelUp")
 @onready var upgrade_options_node: VBoxContainer = get_node("GUILayer/GUI/LevelUp/UpgradeOptions")
 @onready var level_up_stream_node: AudioStreamPlayer = get_node("GUILayer/GUI/LevelUp/snd_lvl_up")
+@onready var health_bar_node: TextureProgressBar = get_node("GUILayer/GUI/HealthBar")
+@onready var label_timer_node: Label = get_node("GUILayer/GUI/lbl_Timer")
+
 @onready var item_option_scene: PackedScene = preload ("res://Scenes/General/item_option.tscn")
 
 func _ready() -> void:
@@ -67,6 +72,7 @@ func _ready() -> void:
 	# attack()
 	# TODO: Remove when script complete for mvp
 	set_exp_bar(experience, calculate_experience_cap())
+	_on_hurtbox_hurt(0, Vector2.ZERO, 0)
 	level_label_node.text = str(exp_level)
 	printerr("Script not complete: " + name)
 
@@ -267,9 +273,23 @@ func get_random_item() -> String:
 	else:
 		return "food"
 
+func change_time(arg_time: int=0) -> void:
+	time = arg_time
+	var minutes_val: int = int(time / 60)
+	var seconds_val: int = int(time) % 60
+	var minute_str: String = str(minutes_val)
+	var seconds_str: String = str(seconds_val)
+	if minutes_val < 10:
+		minute_str = str(0, minutes_val)
+	if seconds_val < 10:
+		seconds_str = str(0, seconds_val)
+
+	label_timer_node.text = str(minute_str, ":", seconds_str)
+
 func _on_hurtbox_hurt(damage: int, _angle: Vector2, _knockback_amount: int) -> void: # common-ish
 	hp -= clamp(damage - armor, 1, 9999)
-	print(hp)
+	health_bar_node.max_value = max_hp
+	health_bar_node.value = hp
 
 func _on_ice_spear_timer_timeout() -> void:
 	ice_spear_ammo += ice_spear_base_ammo + additional_attacks

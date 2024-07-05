@@ -8,6 +8,11 @@ class_name enemySpawner
 
 var time: int = 0
 
+signal change_time(time: int)
+
+func _ready() -> void:
+	connect("change_time", Callable(player_node, "change_time"))
+
 func _on_timer_timeout() -> void:
 	time += 1
 	var enemy_spawns: Array[spawn_info] = spawns
@@ -24,6 +29,7 @@ func _on_timer_timeout() -> void:
 					enemy_spawned.global_position = get_rand_position()
 					add_child(enemy_spawned)
 					counter += 1
+	emit_signal("change_time", time)
 
 func get_rand_position() -> Vector2:
 	var vp_rec: Vector2 = get_viewport_rect().size * randf_range(1.1, 1.4)

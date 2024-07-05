@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bg23r740awxdj"]
+[gd_scene load_steps=15 format=3 uid="uid://bg23r740awxdj"]
 
 [ext_resource type="Script" path="res://Scripts/Player/player.gd" id="1_1smy3"]
 [ext_resource type="Texture2D" uid="uid://ctpjkgm52tchg" path="res://Assets/Textures/Player/player_sprite.png" id="1_8wcva"]
@@ -7,6 +7,8 @@
 [ext_resource type="FontFile" uid="uid://bn5l6tyghepl2" path="res://Assets/Font/tenderness.otf" id="5_doq3g"]
 [ext_resource type="Texture2D" uid="uid://bi4a88m7yb20w" path="res://Assets/Textures/GUI/exp_progress.png" id="5_jkmax"]
 [ext_resource type="AudioStream" uid="uid://djcwnofv4u871" path="res://Assets/Audio/SoundEffect/levelup.ogg" id="7_hm0v7"]
+[ext_resource type="Texture2D" uid="uid://cb2uiu3x300yk" path="res://Assets/Textures/GUI/healthbar.png" id="8_048p0"]
+[ext_resource type="Texture2D" uid="uid://dnt0e58opsmte" path="res://Assets/Textures/GUI/health.png" id="9_ys028"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xsyw7"]
 radius = 8.0
@@ -142,6 +144,33 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("5_doq3g")
 theme_override_font_sizes/font_size = 16
 text = "999999"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HealthBar" type="TextureProgressBar" parent="GUILayer/GUI"]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0.545098)
+custom_minimum_size = Vector2(32, 8)
+layout_mode = 0
+offset_left = 304.0
+offset_top = 200.0
+offset_right = 336.0
+offset_bottom = 208.0
+value = 50.0
+texture_over = ExtResource("8_048p0")
+texture_progress = ExtResource("9_ys028")
+
+[node name="lbl_Timer" type="Label" parent="GUILayer/GUI"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 24)
+layout_mode = 0
+offset_left = 280.0
+offset_top = 20.0
+offset_right = 360.0
+offset_bottom = 44.0
+theme_override_fonts/font = ExtResource("5_doq3g")
+theme_override_font_sizes/font_size = 20
+text = "00:00"
 horizontal_alignment = 1
 vertical_alignment = 1
 
