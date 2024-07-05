@@ -63,8 +63,11 @@ var additional_attacks: int = 0
 @onready var level_up_stream_node: AudioStreamPlayer = get_node("GUILayer/GUI/LevelUp/snd_lvl_up")
 @onready var health_bar_node: TextureProgressBar = get_node("GUILayer/GUI/HealthBar")
 @onready var label_timer_node: Label = get_node("GUILayer/GUI/lbl_Timer")
+@onready var collected_weapons_node: GridContainer = get_node("GUILayer/GUI/CollectedWeapons")
+@onready var collected_upgrade_node: GridContainer = get_node("GUILayer/GUI/CollectedUpgrades")
 
 @onready var item_option_scene: PackedScene = preload ("res://Scenes/General/item_option.tscn")
+@onready var item_container_scene: PackedScene = preload ("res://Scenes/Player/GUI/item_container.tscn")
 
 func _ready() -> void:
 	max_hp = hp
@@ -235,7 +238,7 @@ func upgrade_character(upgrade: String) -> void:
 		"food":
 			hp += 20
 			hp = clamp(hp, 0, max_hp)
-
+	adjust_gui_collection(upgrade)
 	attack()
 
 	var option_children: Array = upgrade_options_node.get_children()
@@ -285,6 +288,26 @@ func change_time(arg_time: int=0) -> void:
 		seconds_str = str(0, seconds_val)
 
 	label_timer_node.text = str(minute_str, ":", seconds_str)
+
+func adjust_gui_collection(upgrade: String) -> void:
+	var get_upgrade_display_name: String = UpgradeDB.UPGRADES[upgrade]["display_name"]
+	var get_type: String = UpgradeDb.UPGRADES[upgrade]["type"]
+	var item_container_node: ItemContainer
+	if get_type != "food":
+		var get_collected_display_names: Array = []
+		for i: String in collected_upgrades:
+			get_collected_display_names.append(UpgradeDB.UPGRADES[i]["display_name"])
+		if not get_upgrade_display_name in get_collected_display_names:
+			item_container_node = item_container_scene.instantiate()
+			item_container_node.upgrade = upgrade
+
+			match get_type:
+				"weapon":
+					collected_weapons_node.add_child(item_container_node)
+				"upgrade":
+					collected_upgrade_node.add_child(item_container_node)
+				_:
+					printerr("Error in inserting new item container")
 
 func _on_hurtbox_hurt(damage: int, _angle: Vector2, _knockback_amount: int) -> void: # common-ish
 	hp -= clamp(damage - armor, 1, 9999)

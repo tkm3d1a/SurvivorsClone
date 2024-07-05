@@ -29,6 +29,11 @@ collision_layer = 2
 collision_mask = 5
 motion_mode = 1
 script = ExtResource("1_1smy3")
+move_speed = null
+hp = null
+ice_spear_lvl = null
+tornado_lvl = null
+javelin_lvl = null
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_8wcva")
@@ -216,6 +221,22 @@ offset_bottom = 100.0
 unique_name_in_owner = true
 stream = ExtResource("7_hm0v7")
 volume_db = -10.0
+
+[node name="CollectedWeapons" type="GridContainer" parent="GUILayer/GUI"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 24.0
+offset_right = 208.0
+offset_bottom = 40.0
+columns = 10
+
+[node name="CollectedUpgrades" type="GridContainer" parent="GUILayer/GUI"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 40.0
+offset_right = 208.0
+offset_bottom = 56.0
+columns = 10
 
 [connection signal="hurt" from="Hurtbox" to="." method="_on_hurtbox_hurt"]
 [connection signal="timeout" from="Attack/IceSpearTimer" to="." method="_on_ice_spear_timer_timeout"]
